@@ -31,7 +31,6 @@ Gem::Specification.new do |s|
   s.homepage = %q{http://github.com/seamusabshere/common_name}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
-  s.rubyforge_project = %q{common_name}
   s.rubygems_version = %q{1.3.5}
   s.summary = %q{DRY up humanize/downcase/underscore/pluralize/to_sym/etc for names that we use all the time.}
   s.test_files = [
@@ -44,8 +43,11 @@ Gem::Specification.new do |s|
     s.specification_version = 3
 
     if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
+      s.add_runtime_dependency(%q<activesupport>, [">= 0"])
     else
+      s.add_dependency(%q<activesupport>, [">= 0"])
     end
   else
+    s.add_dependency(%q<activesupport>, [">= 0"])
   end
 end

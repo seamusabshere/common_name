@@ -10,7 +10,8 @@ begin
     gem.email = "seamus@abshere.net"
     gem.homepage = "http://github.com/seamusabshere/common_name"
     gem.authors = ["Seamus Abshere"]
-    gem.rubyforge_project = "common_name"
+    gem.add_dependency 'activesupport'
+    # gem.rubyforge_project = "commonname"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
 
