@@ -1,18 +1,129 @@
-= common_name
+=common_name
 
-Description goes here.
+DRY up humanize/downcase/underscore/pluralize/to_sym/etc for names that we use all the time.
 
-== Note on Patches/Pull Requests
- 
-* Fork the project.
-* Make your feature addition or bug fix.
-* Add tests for it. This is important so I don't break it in a
-  future version unintentionally.
-* Commit, do not mess with rakefile, version, or history.
-  (if you want to have your own version, that is fine but
-   bump version in a commit by itself I can ignore when I pull)
-* Send me a pull request. Bonus points for topic branches.
+==Examples
 
-== Copyright
+  >> User.common_name
+  => "user"
+  >> User.common_plural_symbol
+  => :users
+  >> User.common_plural_instance
+  => "@users"
+
+==Quick start
+
+Put this in <tt>config/initializers/common_name.rb</tt>... (it will let you say <tt>BusCompany.common_name</tt> and get the string "bus_company")
+
+  ActiveRecord::Base.class_eval do
+    class << self; def _common_name; name.underscore; end; end
+    include CommonName
+  end
+
+Put this in <tt>app/controllers/application_controller.rb</tt>... (in the CareersController, it will let you say <tt>common_model</tt> and get the class Career)
+
+  class ApplicationController < ActionController::Base
+    class << self; def _common_name; controller_name.singularize; end; end
+    include CommonName
+  end
+
+Put this in <tt>app/helpers/application_helper.rb</tt>... (in careers/show, it will let you say <tt><%= common_plural_title %></tt> and see "Careers")
+
+  module ApplicationHelper
+    CommonName::METHODS.each do |m|
+      eval %{ def common_#{m}; controller.common_#{m}; end }
+    end
+  end
+
+Here are all the methods it gives you:
+
+  common_name             => "bus_company"
+  common_symbol           => :bus_company
+  common_instance         => "@bus_company"
+  common_title            => "Bus company"
+  common_human            => "bus company"
+  common_camel            => "BusCompany"
+
+  common_plural           => "bus_companies"
+  common_plural_symbol    => :bus_companies
+  common_plural_instance  => "@bus_companies"
+  common_plural_title     => "Bus companies"
+  common_plural_human     => "bus companies"
+  common_plural_camel     => "BusCompanies"
+
+  common_model            => BusCompany [the class]
+
+==What it's not
+
+It's <em>not</em> a replacement for <tt>humanize</tt>, <tt>pluralize</tt>, etc.
+
+  >> "bus_company".common_title
+  NoMethodError: undefined method 'common_title' for "bus company":String
+
+The point is to cover common names of classes and their instances.
+
+==Rationale
+
+I don't like chains of humanize/downcase/underscore/pluralize/to_sym, for example:
+
+  >> BusCompany.name.underscore.humanize.downcase.pluralize
+  => "bus companies"
+
+So I replaced them with easy-to-remember methods like:
+
+  >> BusCompany.common_plural_human
+  => "bus companies"
+
+I also didn't like worrying about .name versus .class.name:
+
+  >> @bus_company.class.name      # @bus_company = BusCompany.new
+  => "BusCompany"
+  >> @bus_company.name
+  => ""
+
+So, the <tt>common_name</tt> of a class (<tt>BusCompany</tt>) is always equivalent to the <tt>common_name</tt> of its instances (<tt>@bus_company</tt>):
+
+  >> BusCompany.common_plural_human == @bus_company.common_plural_human
+  => true
+
+==Advanced usage
+
+The <tt>_common_name</tt> method should provide an <em>underscored</em> form that will be used to derive other common forms like <tt>common_human</tt> and <tt>common_plural_symbol</tt>.
+
+Note that calling <tt>common_<i>X</i></tt> on a class and on its instances will return the same value.
+
+I also use it on non-ActiveRecord classes:
+
+  class FooBar
+    class << self; def _common_name; name.underscore; end; end
+    include CommonName
+  end
+
+  >> FooBar.common_name
+  => "foo_bar"
+  >> f.common_name         # f = FooBar.new
+  => "foo_bar"
+
+If you define <tt>_common_plural</tt>, it will be the basis for the plural forms:
+
+  class Government
+    class << self
+      def _common_name
+        'government'
+      end
+      def _common_plural
+        'government'
+      end
+    end
+    include CommonName
+  end
+
+That way you can enforce uncountability
+
+  Government.common_name == Government.common_plural
+
+without setting a general rule in the Inflector that the word "government" is uncountable.
+
+==Copyright
 
 Copyright (c) 2009 Seamus Abshere. See LICENSE for details.

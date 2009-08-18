@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Seamus Abshere"]
   s.date = %q{2009-08-18}
-  s.description = %q{TODO: longer description of your gem}
+  s.description = %q{Provides methods like User.common_name (#=> "user") and User.common_plural_symbol (#=> :users) so that you don't have to chain humanize/downcase/etc. etc.'}
   s.email = %q{seamus@abshere.net}
   s.extra_rdoc_files = [
     "LICENSE",
@@ -23,6 +23,7 @@ Gem::Specification.new do |s|
      "README.rdoc",
      "Rakefile",
      "VERSION",
+     "common_name.gemspec",
      "lib/common_name.rb",
      "test/common_name_test.rb",
      "test/test_helper.rb"
@@ -32,7 +33,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.rubyforge_project = %q{common_name}
   s.rubygems_version = %q{1.3.5}
-  s.summary = %q{TODO: one-line summary of your gem}
+  s.summary = %q{DRY up humanize/downcase/underscore/pluralize/to_sym/etc for names that we use all the time.}
   s.test_files = [
     "test/common_name_test.rb",
      "test/test_helper.rb"
