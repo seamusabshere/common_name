@@ -1,15 +1,71 @@
 =common_name
 
-DRY up humanize/downcase/underscore/pluralize/to_sym/etc for names that we use all the time.
+Stop needing to use humanize/downcase/underscore/pluralize/to_sym/etc to derive a common name.
 
-==Examples
+==Why this is useful
 
-  >> User.common_name
-  => "user"
-  >> User.common_plural_symbol
-  => :users
-  >> User.common_plural_instance
-  => "@users"
+In our app, we have lots of classes that share something (a name) in common:
+
+* <tt>class Automobile < Emitter</tt>
+* <tt>class AutomobilesController < EmittersController</tt>
+* <tt>class AutomobilesComponent < Component</tt>
+* <tt>class AutomobileVersion < EmitterVersion</tt>
+* <tt>Boat</tt> et al., <tt>Flight</tt> et al., etc.
+
+Of course, there are a million ways to derive the word "automobile" from any of these class names. We could fill up our app with humanize/downcase/underscore/pluralize, but we think that's sloppy.
+
+So we use <tt>common_name</tt>:
+
+  >> Automobile.common_name
+  => "automobile"
+  >> Automobile.new.common_name
+  => "automobile"
+  >> AutomobilesController.common_name
+  => "automobile"
+  >> AutomobilesController.new.common_name
+  => "automobile"
+  >> AutomobilesComponent.common_name
+  => "automobile"
+  >> AutomobilesComponent.new.common_name
+  => "automobile"
+  >> AutomobileVersion.common_name
+  => "automobile"
+  >> AutomobileVersion.new.common_name
+  => "automobile"
+
+And when metaprogramming:
+
+  module EmitterVersionExtensions
+    def self.included(klass)
+      klass.class_eval do
+        set_table_name "#{common_name}_versions"        # set_table_name "automobile_versions"
+        belongs_to common_symbol                        # belongs_to :automobile
+        has_one :profile, :through => common_symbol     # has_one :profile, :through => :automobile
+      end
+    end
+  end
+
+We also end up using this constantly in views.
+
+==Quick reference
+
+Here are all the methods it gives you:
+
+  common_name             => "bus_company"
+  common_symbol           => :bus_company
+  common_instance         => "@bus_company"
+  common_title            => "Bus company"
+  common_human            => "bus company"
+  common_camel            => "BusCompany"
+
+  common_plural           => "bus_companies"
+  common_plural_symbol    => :bus_companies
+  common_plural_instance  => "@bus_companies"
+  common_plural_title     => "Bus companies"
+  common_plural_human     => "bus companies"
+  common_plural_camel     => "BusCompanies"
+
+  common_model            => BusCompany [the class]
 
 ==Quick start
 
@@ -35,24 +91,6 @@ Put this in <tt>app/helpers/application_helper.rb</tt>... (in careers/show, it w
     end
   end
 
-Here are all the methods it gives you:
-
-  common_name             => "bus_company"
-  common_symbol           => :bus_company
-  common_instance         => "@bus_company"
-  common_title            => "Bus company"
-  common_human            => "bus company"
-  common_camel            => "BusCompany"
-
-  common_plural           => "bus_companies"
-  common_plural_symbol    => :bus_companies
-  common_plural_instance  => "@bus_companies"
-  common_plural_title     => "Bus companies"
-  common_plural_human     => "bus companies"
-  common_plural_camel     => "BusCompanies"
-
-  common_model            => BusCompany [the class]
-
 ==What it's not
 
 It's <em>not</em> a replacement for <tt>humanize</tt>, <tt>pluralize</tt>, etc.
@@ -61,30 +99,6 @@ It's <em>not</em> a replacement for <tt>humanize</tt>, <tt>pluralize</tt>, etc.
   NoMethodError: undefined method 'common_title' for "bus company":String
 
 The point is to cover common names of classes and their instances.
-
-==Rationale
-
-I don't like chains of humanize/downcase/underscore/pluralize/to_sym, for example:
-
-  >> BusCompany.name.underscore.humanize.downcase.pluralize
-  => "bus companies"
-
-So I replaced them with easy-to-remember methods like:
-
-  >> BusCompany.common_plural_human
-  => "bus companies"
-
-I also didn't like worrying about .name versus .class.name:
-
-  >> @bus_company.class.name      # @bus_company = BusCompany.new
-  => "BusCompany"
-  >> @bus_company.name
-  => ""
-
-So, the <tt>common_name</tt> of a class (<tt>BusCompany</tt>) is always equivalent to the <tt>common_name</tt> of its instances (<tt>@bus_company</tt>):
-
-  >> BusCompany.common_plural_human == @bus_company.common_plural_human
-  => true
 
 ==Advanced usage
 
@@ -123,6 +137,30 @@ That way you can enforce uncountability
   Government.common_name == Government.common_plural
 
 without setting a general rule in the Inflector that the word "government" is uncountable.
+
+==Rationale
+
+I don't like chains of humanize/downcase/underscore/pluralize/to_sym, for example:
+
+  >> BusCompany.name.underscore.humanize.downcase.pluralize
+  => "bus companies"
+
+So I replaced them with easy-to-remember methods like:
+
+  >> BusCompany.common_plural_human
+  => "bus companies"
+
+I also didn't like worrying about .name versus .class.name:
+
+  >> @bus_company.class.name      # @bus_company = BusCompany.new
+  => "BusCompany"
+  >> @bus_company.name
+  => ""
+
+So, the <tt>common_name</tt> of a class (<tt>BusCompany</tt>) is always equivalent to the <tt>common_name</tt> of its instances (<tt>@bus_company</tt>):
+
+  >> BusCompany.common_plural_human == @bus_company.common_plural_human
+  => true
 
 ==Copyright
 
