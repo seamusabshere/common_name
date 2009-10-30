@@ -11,8 +11,7 @@ begin
     gem.homepage = "http://github.com/seamusabshere/common_name"
     gem.authors = ["Seamus Abshere"]
     gem.add_dependency 'activesupport'
-    # gem.rubyforge_project = "commonname"
-    # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
+    gem.rubyforge_project = "commonname"
   end
 
   Jeweler::RubyforgeTasks.new do |rubyforge|
