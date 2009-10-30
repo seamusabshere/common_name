@@ -69,6 +69,10 @@ Here are all the methods it gives you:
 
 ==Quick start
 
+Put this in <tt>config/environment.rb</tt>
+
+  config.gem 'common_name'
+
 Put this in <tt>config/initializers/common_name.rb</tt>... (it will let you say <tt>BusCompany.common_name</tt> and get the string "bus_company")
 
   ActiveRecord::Base.class_eval do
