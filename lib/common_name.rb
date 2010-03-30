@@ -8,8 +8,7 @@
 # 
 # Copyright (c) 2009 Seamus Abshere. See LICENSE for details.
 
-require 'rubygems'
-require 'activesupport'
+require 'active_support'
 
 module CommonName
   def self.included(klass)

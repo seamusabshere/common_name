@@ -10,7 +10,7 @@ begin
     gem.email = "seamus@abshere.net"
     gem.homepage = "http://github.com/seamusabshere/common_name"
     gem.authors = ["Seamus Abshere"]
-    gem.add_dependency 'activesupport'
+    gem.add_dependency 'activesupport', '>=2.3.4'
     gem.rubyforge_project = "commonname"
   end
   Jeweler::GemcutterTasks.new
