@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{common_name}
-  s.version = "0.1.4"
+  s.version = "0.1.5"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Seamus Abshere"]
-  s.date = %q{2009-10-30}
+  s.date = %q{2010-03-30}
   s.description = %q{Provides methods like User.common_name (#=> "user") and User.common_plural_symbol (#=> :users) so that you don't have to chain humanize/downcase/etc. etc.'}
   s.email = %q{seamus@abshere.net}
   s.extra_rdoc_files = [
@@ -32,7 +32,7 @@ Gem::Specification.new do |s|
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubyforge_project = %q{commonname}
-  s.rubygems_version = %q{1.3.5}
+  s.rubygems_version = %q{1.3.6}
   s.summary = %q{DRY up humanize/downcase/underscore/pluralize/to_sym/etc for names that we use all the time.}
   s.test_files = [
     "test/common_name_test.rb",
@@ -44,12 +44,12 @@ Gem::Specification.new do |s|
     s.specification_version = 3
 
     if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<activesupport>, [">= 0"])
+      s.add_runtime_dependency(%q<activesupport>, [">= 2.3.4"])
     else
-      s.add_dependency(%q<activesupport>, [">= 0"])
+      s.add_dependency(%q<activesupport>, [">= 2.3.4"])
     end
   else
-    s.add_dependency(%q<activesupport>, [">= 0"])
+    s.add_dependency(%q<activesupport>, [">= 2.3.4"])
   end
 end
 
