@@ -10,6 +10,10 @@
 
 require 'active_support'
 
+if defined?(Rails)
+  require 'common_name/railtie'
+end
+
 module CommonName
   def self.included(klass)
     klass.extend ClassMethods
