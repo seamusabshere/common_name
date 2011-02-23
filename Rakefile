@@ -1,25 +1,5 @@
-require 'rubygems'
-require 'rake'
-
-begin
-  require 'jeweler'
-  Jeweler::Tasks.new do |gem|
-    gem.name = "common_name"
-    gem.summary = %Q{DRY up humanize/downcase/underscore/pluralize/to_sym/etc for names that we use all the time.}
-    gem.description = %Q{Provides methods like User.common_name (#=> "user") and User.common_plural_symbol (#=> :users) so that you don't have to chain humanize/downcase/etc. etc.'}
-    gem.email = "seamus@abshere.net"
-    gem.homepage = "http://github.com/seamusabshere/common_name"
-    gem.authors = ["Seamus Abshere"]
-    gem.add_dependency 'activesupport', '>=2.3.4'
-    gem.rubyforge_project = "commonname"
-  end
-  Jeweler::GemcutterTasks.new
-  Jeweler::RubyforgeTasks.new do |rubyforge|
-    rubyforge.doc_task = "rdoc"
-  end
-rescue LoadError
-  puts "Jeweler (or a dependency) not available. Install it with: sudo gem install jeweler"
-end
+require 'bundler'
+Bundler::GemHelper.install_tasks
 
 require 'rake/testtask'
 Rake::TestTask.new(:test) do |test|
@@ -40,9 +20,6 @@ rescue LoadError
     abort "RCov is not available. In order to run rcov, you must: sudo gem install spicycode-rcov"
   end
 end
-
-
-
 
 task :default => :test
 
