@@ -1,3 +1,15 @@
+require 'active_support'
+require 'active_support/version'
+%w{
+  active_support/inflector
+}.each do |active_support_3_requirement|
+  require active_support_3_requirement
+end if ::ActiveSupport::VERSION::MAJOR == 3
+
+if defined?(::Rails)
+  require 'common_name/railtie'
+end
+
 # This library comes out of my frustration with seeing lines like
 # 
 #   BusCompany.name.underscore.humanize.downcase.pluralize #=> "bus companies"
@@ -7,13 +19,6 @@
 # See <tt>README</tt> for more information.
 # 
 # Copyright (c) 2009 Seamus Abshere. See LICENSE for details.
-
-require 'active_support'
-
-if defined?(Rails)
-  require 'common_name/railtie'
-end
-
 module CommonName
   def self.included(klass)
     klass.extend ClassMethods
