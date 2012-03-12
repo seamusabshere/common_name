@@ -1,13 +1,8 @@
 require 'active_support'
 require 'active_support/version'
-%w{
-  active_support/inflector
-}.each do |active_support_3_requirement|
-  require active_support_3_requirement
-end if ::ActiveSupport::VERSION::MAJOR == 3
-
-if defined?(::Rails)
-  require 'common_name/railtie'
+if ::ActiveSupport::VERSION::MAJOR >= 3
+  require 'active_support/core_ext/string'
+  require 'active_support/inflector'
 end
 
 # This library comes out of my frustration with seeing lines like
@@ -32,7 +27,9 @@ module CommonName
   
   # delegate instance methods to class methods
   METHODS.each do |m|
-    eval %{ def common_#{m}; self.class.common_#{m}; end }
+    define_method "common_#{m}" do
+      self.class.send("common_#{m}")
+    end
   end
   
   module ClassMethods
@@ -90,5 +87,22 @@ module CommonName
     
     # "BusCompanies"
     def common_plural_camel;      _COMMON_PLURAL_CAMEL    ||= common_plural.camelcase;                                                  end
+  end
+end
+
+if defined?(::ActiveRecord)
+  ::ActiveRecord::Base.class_eval do
+    def self._common_name
+      name.underscore
+    end
+    include ::CommonName
+  end
+end
+if defined?(::ActionController)
+  ::ActionController::Base.class_eval do
+    def self._common_name
+      controller_name.singularize
+    end
+    include ::CommonName
   end
 end

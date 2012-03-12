@@ -11,7 +11,7 @@ end
 # a class where you always want to chop off the _component part and singularize
 class Component
   def self._common_name
-    name.underscore.gsub('_component', '').singularize
+    name.underscore.sub(/_component$/, '').singularize
   end
   include CommonName
 end
